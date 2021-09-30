@@ -30,7 +30,8 @@ def print_info_about_molecule(molecule_name: str, number_of_atoms: int,
           f'Number of bonds: {number_of_bonds}.\n')
 
 
-def coordinates(file: TextIO, number_of_atoms: int) -> List[Dict[str, Union[float, str]]]:
+def coordinates(file: TextIO,
+                number_of_atoms: int) -> List[Dict[str, Union[float, str]]]:
     """Process coordinates part of file.
     Info about one atom is stored in dictionary.
     """
@@ -40,7 +41,7 @@ def coordinates(file: TextIO, number_of_atoms: int) -> List[Dict[str, Union[floa
         x, y, z, atom_name, *rest = file.readline().split()
         x, y, z = float(x), float(y), float(z)
 
-        atom["x"], atom["y"], atom["z"], atom["atom name"] = x, y, z, atom_name
+        atom['x'], atom['y'], atom['z'], atom['atom name'] = x, y, z, atom_name
         coordinates_of_atoms.append(atom)
 
     return coordinates_of_atoms
@@ -63,15 +64,15 @@ def bonds(file: TextIO, number_of_bonds: int) -> List[Tuple[int, int, int]]:
 def molecular_formula(number_of_atoms: int,
                       molecule_data: List[Dict[str, Union[float, str]]]) -> None:
     """Prints molecular formula."""
-    atom_names_list = [molecule_data[i]["atom name"] for i in range(number_of_atoms)]
-    print("Molecular formula: ", end="")
+    atom_names_list = [molecule_data[i]['atom name'] for i in range(number_of_atoms)]
+    print('Molecular formula: ', end='')
     for atom in (set(atom_names_list)):
-        print(f'{atom}{atom_names_list.count(atom)}', end=" ")
+        print(f'{atom}{atom_names_list.count(atom)}', end=' ')
     print()
 
 
 def non_structural_data(file: TextIO) -> None:
-    delimiter = "$$$$\n"
+    delimiter = '$$$$\n'
     line = file.readline()
     while line != delimiter:
         line = file.readline()
@@ -129,7 +130,7 @@ def read_mol_file(path_to_file: str) -> None:
 
         while True:
             molecule_name = file.readline().strip()
-            if molecule_name == "":
+            if molecule_name == '':
                 break
 
             names_of_all_molecules.append(molecule_name)
@@ -148,13 +149,14 @@ def read_mol_file(path_to_file: str) -> None:
             non_structural_data(file)
 
             number_of_records += 1
-            print("--------\n")
+            print('--------\n')
         statistics(number_of_records, names_of_all_molecules,
                    number_of_atoms_of_each_molecule)
 
 
-parser = argparse.ArgumentParser()
-parser.add_argument('file', help="Input file in .sdf format")
-args = parser.parse_args()
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('file', help='Input file in .sdf format')
+    args = parser.parse_args()
 
-read_mol_file(args.file)
+    read_mol_file(args.file)
