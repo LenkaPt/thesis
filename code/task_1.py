@@ -171,6 +171,7 @@ def read_sdf_file(path_to_file: str) -> None:
 Load and process pdb file.
 """
 
+
 def atom_coordinates_pdb(line: str) -> Dict[str, Union[float, str]]:
     """Returns coordinates of atom (pdb format)."""
     atom = {}
@@ -202,20 +203,25 @@ def one_aa_from_pdb(line: str, file: TextIO) \
     return only_aa, line
 
 
-def most_common_aa(aa: List[str]) -> Dict[str, int]:
+def print_composition_of_protein(aa_counts: Dict[str, int],
+                                 most_common: Tuple[str, int]) -> None:
     """Prints count of particular aminoacids in protein.
     Prints the most common aminoacid in protein.
-    Returns count of particular aminoacids.
     """
-    # Counter.most_common returns list of tuples (of x most commons)
-    aa_counts = Counter(aa)
     print(f'Protein consists of:')
     for key, value in aa_counts.items():
         print(f'{value} {key}')
     print()
-    most_common = aa_counts.most_common(1)[0]
     print(f'Most common aminoacid is: {most_common[0]} ({most_common[1]} occurrencies).')
-    return aa_counts
+
+
+def composition_of_protein(aa: List[str]) -> Tuple[Dict[str, int], Tuple[str, int]]:
+    """Returns count of particular aminoacids and most common aminoacid."""
+    aa_counts = Counter(aa)
+    # Counter.most_common returns list of tuples (of x most commons)
+    most_common = aa_counts.most_common(1)[0]
+    print_composition_of_protein(aa_counts, most_common)
+    return aa_counts, most_common
 
 
 def read_pdb_file(path_to_file: str) -> None:
@@ -229,7 +235,7 @@ def read_pdb_file(path_to_file: str) -> None:
             all_aa_info.append(one_aa)
         # print(all_aa_info)
         print()
-        aa_counts = most_common_aa(all_aa_names)
+        composition_of_protein(all_aa_names)
 
 
 if __name__ == '__main__':
