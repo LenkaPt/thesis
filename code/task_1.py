@@ -224,6 +224,33 @@ def composition_of_protein(aa: List[str]) -> Tuple[Dict[str, int], Tuple[str, in
     return aa_counts, most_common
 
 
+def load_one_standard_aa(file: TextIO) -> Dict[str, List[Tuple[str]]]:
+    """Returns one aminoacid as dictionary.
+    Key = name of aminoacid, value = list of tuples.
+    One tuple represents one bond (atom1, atom2, type of bond)
+    {name_of_aa: [(atom1, atom2, type_of_bond), (...), ...]}
+    """
+    name = file.readline().strip()
+    only_aa = {name: []}
+    line = file.readline()
+    # EOF or empty line (end of aa)
+    while line and line != '\n':
+        first_atom, sec_atom, bond = line.split()
+        only_aa[name].append((first_atom, sec_atom, bond))
+        line = file.readline()
+    return only_aa
+
+
+def load_standard_aa(path_to_file: str) -> List[Dict[str, List[Tuple[str]]]]:
+    """Returns list of bonds in standard aminoacids."""
+    with open(path_to_file) as file:
+        aa = []
+        for _ in range(20):
+            aa.append(load_one_standard_aa(file))
+        print(aa)
+        return aa
+
+
 def read_pdb_file(path_to_file: str) -> None:
     with open(path_to_file) as file:
         line = non_structural_data(file, 'ATOM')
@@ -236,6 +263,7 @@ def read_pdb_file(path_to_file: str) -> None:
         # print(all_aa_info)
         print()
         composition_of_protein(all_aa_names)
+        # load_standard_aa("amino_acids.txt")
 
 
 if __name__ == '__main__':
