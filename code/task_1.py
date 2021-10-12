@@ -255,6 +255,15 @@ def load_standard_aa(path_to_file: str) -> Dict[str, Dict[Tuple[str, str], int]]
         return aa
 
 
+def bonds_count_pdb(all_aa_info: List[Dict[str, Union[list, int, str]]],
+                   num_of_residuum: int) -> None:
+    standard_aa = load_standard_aa("amino_acids.txt")
+    aa_with_required_num = all_aa_info[num_of_residuum - 1]
+
+    standard_bonds = standard_aa[aa_with_required_num['residue name']]
+    process_data_about_bonds(standard_bonds)
+
+
 def read_pdb_file(path_to_file: str) -> None:
     with open(path_to_file) as file:
         line = non_structural_data(file, 'ATOM')
@@ -267,7 +276,9 @@ def read_pdb_file(path_to_file: str) -> None:
         # print(all_aa_info)
         print()
         composition_of_protein(all_aa_names)
-        # load_standard_aa("amino_acids.txt")
+
+        # for example: how many bonds is formed by aminoacid 45 (atom C, CG1)
+        bonds_count_pdb(all_aa_info, 45)
 
 
 if __name__ == '__main__':
