@@ -48,18 +48,19 @@ def coordinates(file: TextIO,
     return coordinates_of_atoms
 
 
-def bonds(file: TextIO, number_of_bonds: int) -> List[Tuple[int, int, int]]:
+def bonds(file: TextIO, number_of_bonds: int) -> Dict[Tuple[int, int], int]:
     """Process bonds part of file.
     Info about one bond is stored in tuple.
     """
-    informations_about_bonds = []
+    bonds_data = {}
     for i in range(number_of_bonds):
         line = file.readline()
-        first_atom, second_atom, type_of_bond = int(line[:3]), int(line[3:6]), int(line[6:9])
+        first_atom, second_atom = sorted((int(line[:3]), int(line[3:6])))
+        type_of_bond = int(line[6:9])
 
-        informations_about_bonds.append((first_atom, second_atom, type_of_bond))
+        bonds_data[(first_atom, second_atom)] = type_of_bond
 
-    return informations_about_bonds
+    return bonds_data
 
 
 def molecular_formula(number_of_atoms: int,
@@ -268,7 +269,7 @@ def read_pdb_file(path_to_file: str) -> None:
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('file', help='Input file in .sdf format')
+    parser.add_argument('file', help='Input file in .sdf or .pdb format')
     args = parser.parse_args()
 
     input_file = args.file
