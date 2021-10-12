@@ -227,22 +227,23 @@ def composition_of_protein(aa: List[str]) -> Tuple[Dict[str, int], Tuple[str, in
     return aa_counts, most_common
 
 
-def load_one_standard_aa(file: TextIO) -> Tuple[str, List[Tuple[str, str, str]]]:
+def load_one_standard_aa(file: TextIO) -> Tuple[str, Dict[Tuple[str, str], int]]:
     """Returns name of aminoacid and list of tuples.
     One tuple represents one bond (atom1, atom2, type of bond).
     """
     name = file.readline().strip()
-    atoms_of_aa = []
+    atoms_of_aa = {}
     line = file.readline()
     # EOF or empty line (end of aa)
     while line and line != '\n':
         first_atom, sec_atom, bond = line.split()
-        atoms_of_aa.append((first_atom, sec_atom, bond))
+        first_atom, sec_atom = sorted((first_atom, sec_atom))
+        atoms_of_aa[(first_atom, sec_atom)] = int(bond)
         line = file.readline()
     return name, atoms_of_aa
 
 
-def load_standard_aa(path_to_file: str) -> Dict[str, List[Tuple[str, str, str]]]:
+def load_standard_aa(path_to_file: str) -> Dict[str, Dict[Tuple[str, str], int]]:
     """Returns standard aminoacids, saved in dictionary.
     {name_of_aa: [(atom1, atom2, type_of_bond), (...), ...]}
     """
