@@ -5,7 +5,7 @@ Load and process sdf file.
 
 import argparse
 from typing import List, Union, Dict, Tuple, TextIO
-from collections import Counter
+from collections import Counter, defaultdict
 
 
 def skip_two_lines(file: TextIO) -> None:
@@ -81,32 +81,34 @@ def non_structural_data(file: TextIO, delimiter: str) -> str:
     return line
 
 
-def bonds_of_atom(atoms_bonds_dict: Dict[int, List[int]],
-                  number_of_atom: int) -> None:
+def bonds_of_atom(atoms_bonds_data: Dict[int, Counter],
+                  atom: Union[int, str]) -> None:
     """Prints information about bonds outgoing of specific atom."""
-    print(f'Atom number {number_of_atom} forms {atoms_bonds_dict[number_of_atom][0]}',
-          f'single bonds, {atoms_bonds_dict[number_of_atom][1]} double bonds and ',
-          f'{atoms_bonds_dict[number_of_atom][2]} triple bonds.')
+    print(f'Atom {atom} forms {atoms_bonds_data[atom][1]}',
+          f'single bonds, {atoms_bonds_data[atom][2]} double bonds and ',
+          f'{atoms_bonds_data[atom][3]} triple bonds.')
 
 
-def processed_informations_about_bonds(data_about_bonds: List[Tuple[int, int, int]],
-                                       number_of_atoms: int) -> Dict[int, List[int]]:
+def process_data_about_bonds(
+        data_about_bonds: Dict[Tuple[Union[int, str], Union[int, str]], int]) \
+        -> Dict[int, Counter]:
     """Provides informations about atoms and its bonds.
-    Returns dictionary. Key -> number of atom. Value -> list, where
-    position means type of bond formed by atom [single, double, triple].
+    Returns dictionary. Key -> number of atom or atom name.
+    Value is also dictionary, where key is type of bond and value is
+    how many bonds of that type forms particular atom.
     """
-    atoms_bonds_dict = {}
-    for i in range(1, number_of_atoms + 1):
-        # atoms_bonds_dict[i] = [single, double, triple] bond
-        atoms_bonds_dict[i] = [0, 0, 0]
+    atoms_bonds = defaultdict(Counter)
 
-    for first_atom, sec_atom, type_of_bond in data_about_bonds:
-        # type_of_bond - 1 -> list index from 0
-        atoms_bonds_dict[first_atom][type_of_bond - 1] += 1
-        atoms_bonds_dict[sec_atom][type_of_bond - 1] += 1
+    for atoms, bond in data_about_bonds.items():
+        first_atom, sec_atom = atoms
+        atoms_bonds[first_atom][bond] += 1
+        atoms_bonds[sec_atom][bond] += 1
 
-    bonds_of_atom(atoms_bonds_dict, 2)
-    return atoms_bonds_dict
+    bonds_of_atom(atoms_bonds, 'CG1')
+    bonds_of_atom(atoms_bonds, 8)
+    bonds_of_atom(atoms_bonds, 'C')
+
+    return atoms_bonds
 
 
 def find_min_max(sequence: List[int]) -> (int, int):
@@ -157,7 +159,7 @@ def read_sdf_file(path_to_file: str) -> None:
 
             coordinates_data = coordinates(file, number_of_atoms)
             data_about_bonds = bonds(file, number_of_bonds)
-            processed_informations_about_bonds(data_about_bonds, number_of_atoms)
+            process_data_about_bonds(data_about_bonds)
 
             molecular_formula(number_of_atoms, coordinates_data)
             non_structural_data(file, '$$$$\n')
