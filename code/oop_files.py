@@ -45,24 +45,28 @@ class Molecule:
     def atoms(self):
         return self._atoms
 
-    def molecular_formula(self):
+    def molecular_formula(self) -> str:
+        """Returns molecular formula."""
         atoms = [atom.name for atom in self._atoms]
+        result = []
         for atom, count in Counter(atoms).items():
-            print(f'{atom}{count}', end='')
-        print()
+            result.append(atom)
+            result.append(str(count))
+
+        return ''.join(result)
 
     def __len__(self):
         return len(self.atoms)
 
 
-'''atom1 = Atom(1, 2, 3, 'H')
+atom1 = Atom(1, 2, 3, 'H')
 atom2 = Atom(0.1, 0.2, 0.3, 'H')
 atom3 = Atom(10, 20, 30, 'O')
 atom4 = Atom(1, 2, 3, 'O')
 
 molec = Molecule('H2O', [atom1, atom2, atom3, atom4], {(1, 12): 1, (1, 17): 1, (1, 18): 1, (2, 16): 2, (3, 17): 2})
-molec.molecular_formula()
-print(molec.atoms)'''
+print(molec.molecular_formula())
+# print(molec.atoms)
 
 
 class Chain:
@@ -189,7 +193,7 @@ def get_atom_pdb(line: str) -> Atom:
 
 
 def get_residue_pdb(file: TextIO, line: str) -> Tuple[Residue, str, str]:
-    """Returns one residuum from pdb file."""
+    """Returns one residuum from pdb file, chain ID and last line."""
     chain_id = line[22]
     residue_seq_number = line[23:26]
     residue_name = line[17:20]
