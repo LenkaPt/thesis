@@ -31,8 +31,8 @@ def print_info_about_molecule(molecule_name: str, number_of_atoms: int,
           f'Number of bonds: {number_of_bonds}.\n')
 
 
-def coordinates(file: TextIO,
-                number_of_atoms: int) -> List[Dict[str, Union[float, str]]]:
+def get_atoms(file: TextIO,
+              number_of_atoms: int) -> List[Dict[str, Union[float, str]]]:
     """Process coordinates part of file.
     Info about one atom is stored in dictionary.
     """
@@ -73,7 +73,7 @@ def molecular_formula(number_of_atoms: int,
     print()
 
 
-def non_structural_data(file: TextIO, delimiter: str) -> str:
+def skip_non_structural_data(file: TextIO, delimiter: str) -> str:
     """Skip lines until the line with delimiter is reached."""
     line = file.readline()
     while not line.startswith(delimiter):
@@ -157,12 +157,12 @@ def read_sdf_file(path_to_file: str) -> None:
             print_info_about_molecule(molecule_name, number_of_atoms,
                                       number_of_bonds)
 
-            coordinates_data = coordinates(file, number_of_atoms)
+            atoms_data = get_atoms(file, number_of_atoms)
             data_about_bonds = bonds(file, number_of_bonds)
             process_data_about_bonds(data_about_bonds)
 
-            molecular_formula(number_of_atoms, coordinates_data)
-            non_structural_data(file, '$$$$\n')
+            molecular_formula(number_of_atoms, atoms_data)
+            skip_non_structural_data(file, '$$$$\n')
 
             print('--------\n')
         statistics(names_of_all_molecules, number_of_atoms_of_each_molecule)
@@ -266,7 +266,7 @@ def bonds_count_pdb(all_aa_info: List[Dict[str, Union[list, int, str]]],
 
 def read_pdb_file(path_to_file: str) -> None:
     with open(path_to_file) as file:
-        line = non_structural_data(file, 'ATOM')
+        line = skip_non_structural_data(file, 'ATOM')
         all_aa_names = []
         all_aa_info = []
         while line.startswith('ATOM'):
