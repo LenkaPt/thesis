@@ -38,11 +38,11 @@ class Molecule:
         self._bonds = bonds
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
     @property
-    def atoms(self):
+    def atoms(self) -> List[Atom]:
         return self._atoms
 
     def molecular_formula(self) -> str:
@@ -55,24 +55,24 @@ class Molecule:
 
         return ''.join(result)
 
-    def __len__(self):
+    def __len__(self) -> int:
         return len(self.atoms)
 
 
-atom1 = Atom(1, 2, 3, 'H')
+'''atom1 = Atom(1, 2, 3, 'H')
 atom2 = Atom(0.1, 0.2, 0.3, 'H')
 atom3 = Atom(10, 20, 30, 'O')
 atom4 = Atom(1, 2, 3, 'O')
 
 molec = Molecule('H2O', [atom1, atom2, atom3, atom4], {(1, 12): 1, (1, 17): 1, (1, 18): 1, (2, 16): 2, (3, 17): 2})
 print(molec.molecular_formula())
-# print(molec.atoms)
+# print(molec.atoms)'''
 
 
 class Chain:
-    def __init__(self, residues, name):
-        self.residues = residues
+    def __init__(self, name, residues):
         self._name = name
+        self._residues = residues
 
 
 class Residue:
@@ -82,7 +82,7 @@ class Residue:
         self._atoms = atoms
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
 
@@ -194,27 +194,43 @@ def get_atom_pdb(line: str) -> Atom:
 
 def get_residue_pdb(file: TextIO, line: str) -> Tuple[Residue, str, str]:
     """Returns one residuum from pdb file, chain ID and last line."""
-    chain_id = line[22]
+    chain_id = line[21]
     residue_seq_number = line[23:26]
     residue_name = line[17:20]
+    # collect all atoms of one residue
     atoms = []
     while residue_seq_number == line[23:26]:
         atom = get_atom_pdb(line)
         atoms.append(atom)
         line = file.readline()
-    residue = Residue(residue_name, residue_seq_number, atoms)
+        if line.startswith('TER'):
+            # TER -> termination of chain (ignored in this program)
+            line = file.readline()
+            break
 
+    residue = Residue(residue_name, residue_seq_number, atoms)
     return residue, chain_id, line
+
+
+def get_chain(file: TextIO, line: str) -> Tuple[Chain, str]:
+    residues = []
+    last_chain_id = line[21]
+    while last_chain_id == line[21]:
+        residue, chain_id, line = get_residue_pdb(file, line)
+        residues.append(residue)
+        last_chain_id = chain_id
+
+    chain = Chain(last_chain_id, residues)
+    return chain, line
 
 
 def read_pdb_file(path_to_file: str) -> None:
     with open(path_to_file) as file:
         line = skip_non_structural_data(file, 'ATOM')
-        residues = []
-        for i in range(20):
-            residue, chain_id, line = get_residue_pdb(file, line)
-            residues.append(residue)
-            print(residues[i].name)
+        chains = []
+        while line.startswith('ATOM'):
+            chain, line = get_chain(file, line)
+            chains.append(chain)
 
 
 if __name__ == '__main__':
