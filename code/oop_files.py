@@ -87,6 +87,9 @@ class Residue:
     def atoms(self) -> List[Atom]:
         return self._atoms
 
+    def get_atom_count(self) -> int:
+        return len(self.atoms)
+
 
 class Chain:
     def __init__(self, name, residues):
