@@ -110,6 +110,9 @@ class Chain:
     def __len__(self) -> int:
         return len(self.residues)
 
+    def __getitem__(self, item):
+        return self.residues[item]
+
 
 class Model:
     def __init__(self, name, chains):
