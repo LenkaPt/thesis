@@ -115,6 +115,14 @@ class Model:
     def chains(self) -> List[Chain]:
         return self._chains
 
+class Protein:
+    def __init__(self, models):
+        self._models = models
+
+    @property
+    def models(self) -> List[Model]:
+        return self._models
+
 
 def skip_two_lines(file: TextIO) -> None:
     for _ in range(2):
@@ -291,12 +299,13 @@ def get_models(file: TextIO) -> List[Model]:
     return models
 
 
-def read_pdb_file(path_to_file: str) -> None:
+def read_pdb_file(path_to_file: str) -> Protein:
     with open(path_to_file) as file:
         models = get_models(file)
+        protein = Protein(models)
 
-        for model in models:
-            print(model.chains[-1].residues[-1].atoms[-1].name)
+        print(protein.models[-1].chains[-1].residues[-1].atoms[-1].name)
+        return protein
 
 
 if __name__ == '__main__':
