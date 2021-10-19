@@ -123,7 +123,7 @@ class Model:
 
     def get_number_of_chains(self) -> int:
         return len(self.chains)
-    
+
 
 class Protein:
     def __init__(self, models):
@@ -132,6 +132,9 @@ class Protein:
     @property
     def models(self) -> List[Model]:
         return self._models
+
+    def get_number_of_models(self) -> int:
+        return len(self.models)
 
 
 def skip_two_lines(file: TextIO) -> None:
