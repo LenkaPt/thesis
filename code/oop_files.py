@@ -69,12 +69,6 @@ print(molec.molecular_formula())
 # print(molec.atoms)'''
 
 
-class Chain:
-    def __init__(self, name, residues):
-        self._name = name
-        self._residues = residues
-
-
 class Residue:
     def __init__(self, name, number, atoms):
         self._name = name
@@ -84,6 +78,42 @@ class Residue:
     @property
     def name(self) -> str:
         return self._name
+
+    @property
+    def number(self) -> int:
+        return self._number
+
+    @property
+    def atoms(self) -> List[Atom]:
+        return self._atoms
+
+
+class Chain:
+    def __init__(self, name, residues):
+        self._name = name
+        self._residues = residues
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def residues(self) -> List[Residue]:
+        return self._residues
+
+
+class Model:
+    def __init__(self, name, chains):
+        self._name = name
+        self._chains = chains
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def chains(self) -> List[Chain]:
+        return self._chains
 
 
 def skip_two_lines(file: TextIO) -> None:
@@ -125,11 +155,20 @@ def bonds(file: TextIO, number_of_bonds: int) -> Dict[Tuple[int, int], int]:
     return bonds_data
 
 
-def skip_non_structural_data(file: TextIO, delimiter: str) -> str:
-    """Skip lines until the line with delimiter is reached."""
+def skip_non_structural_data(file: TextIO, delimiter: str, pdb: bool = False) -> str:
+    """Skip lines until the line with delimiter is reached.
+    If pdb=True - ussually searching for delimiter MODEL.
+    But it is optional - in case that there is no MODEL in pdb,
+    program returns line with keyword ATOM"""
     line = file.readline()
     while not line.startswith(delimiter):
-        line = file.readline()
+        if not pdb:
+            line = file.readline()
+            continue
+        else:
+            if line.startswith('ATOM'):
+                break
+            line = file.readline()
     return line
 
 
@@ -213,6 +252,7 @@ def get_residue_pdb(file: TextIO, line: str) -> Tuple[Residue, str, str]:
 
 
 def get_chain(file: TextIO, line: str) -> Tuple[Chain, str]:
+    """Returns one chain of biomolecule and last executed line."""
     residues = []
     last_chain_id = line[21]
     while last_chain_id == line[21]:
@@ -226,7 +266,7 @@ def get_chain(file: TextIO, line: str) -> Tuple[Chain, str]:
 
 def read_pdb_file(path_to_file: str) -> None:
     with open(path_to_file) as file:
-        line = skip_non_structural_data(file, 'ATOM')
+        line = skip_non_structural_data(file, 'MODEL', pdb = True)
         chains = []
         while line.startswith('ATOM'):
             chain, line = get_chain(file, line)
@@ -239,4 +279,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     input_file = args.file
-    read_pdb_file(input_file)
+    if input_file.endswith('.sdf'):
+        read_sdf_file(input_file)
+    elif input_file.endswith('.pdb'):
+        read_pdb_file(input_file)
