@@ -121,6 +121,10 @@ class Model:
     def chains(self) -> List[Chain]:
         return self._chains
 
+    def get_number_of_chains(self) -> int:
+        return len(self.chains)
+    
+
 class Protein:
     def __init__(self, models):
         self._models = models
