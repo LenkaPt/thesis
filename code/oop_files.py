@@ -145,6 +145,12 @@ class Model:
             residue_count += len(chain)
         return residue_count
 
+    def get_most_common_residue(self) -> str:
+        residues = []
+        for chain in self:
+            residues += [residue.name for residue in chain]
+        return Counter(residues).most_common(1)[0][0]
+
 
 class Protein:
     def __init__(self, models):
