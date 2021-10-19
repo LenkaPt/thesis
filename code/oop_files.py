@@ -104,6 +104,9 @@ class Chain:
     def residues(self) -> List[Residue]:
         return self._residues
 
+    def __len__(self) -> int:
+        return len(self.residues)
+
 
 class Model:
     def __init__(self, name, chains):
