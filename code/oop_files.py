@@ -264,13 +264,39 @@ def get_chain(file: TextIO, line: str) -> Tuple[Chain, str]:
     return chain, line
 
 
-def read_pdb_file(path_to_file: str) -> None:
-    with open(path_to_file) as file:
-        line = skip_non_structural_data(file, 'MODEL', pdb = True)
+def get_models(file: TextIO) -> List[Model]:
+    """Returns all models in pdb file."""
+    models = []
+    line = skip_non_structural_data(file, 'MODEL', pdb=True)
+    # It is possible, that no keyword MODEL is in file - in that case
+    # line starts with ATOM keyword. This program saves data as
+    # model with name 1
+    while line.startswith('MODEL') or line.startswith('ATOM'):
+        if line.startswith('MODEL'):
+            model_name = int(line[11:14])
+            line = file.readline()
+        else:
+            model_name = 1
+
         chains = []
         while line.startswith('ATOM'):
             chain, line = get_chain(file, line)
             chains.append(chain)
+
+        model = Model(model_name, chains)
+        models.append(model)
+
+        # line is now ENDMDL
+        line = file.readline()  # next MODEL or end of structural part
+    return models
+
+
+def read_pdb_file(path_to_file: str) -> None:
+    with open(path_to_file) as file:
+        models = get_models(file)
+
+        for model in models:
+            print(model.chains[-1].residues[-1].atoms[-1].name)
 
 
 if __name__ == '__main__':
