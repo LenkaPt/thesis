@@ -130,6 +130,9 @@ class Model:
     def get_number_of_chains(self) -> int:
         return len(self.chains)
 
+    def __getitem__(self, item):
+        return self.chains[item]
+
 
 class Protein:
     def __init__(self, models):
