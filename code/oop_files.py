@@ -139,6 +139,12 @@ class Model:
     def __getitem__(self, item):
         return self.chains[item]
 
+    def get_residue_count(self) -> int:
+        residue_count = 0
+        for chain in self:
+            residue_count += len(chain)
+        return residue_count
+
 
 class Protein:
     def __init__(self, models):
