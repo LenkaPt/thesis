@@ -145,6 +145,9 @@ class Protein:
     def get_number_of_models(self) -> int:
         return len(self.models)
 
+    def __getitem__(self, item):
+        return self.models[item]
+
 
 def skip_two_lines(file: TextIO) -> None:
     for _ in range(2):
