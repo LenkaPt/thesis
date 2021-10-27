@@ -42,20 +42,12 @@ def bonds(file: TextIO, number_of_bonds: int) -> Dict[Tuple[int, int], int]:
     return bonds_data
 
 
-def skip_non_structural_data(file: TextIO, delimiter: str, pdb: bool = False) -> str:
-    """Skip lines until the line with delimiter is reached.
-    If pdb=True - usually searching for delimiter MODEL.
-    But it is optional - in case that there is no MODEL in pdb,
-    program returns line with keyword ATOM"""
+def skip_non_structural_data(file: TextIO, delimiters: List[str]) -> str:
+    """Skip lines until the line with one of the delimiters is reached."""
+    delimiters = tuple(delimiters)
     line = file.readline()
-    while not line.startswith(delimiter):
-        if not pdb:
-            line = file.readline()
-            continue
-        else:
-            if line.startswith('ATOM'):
-                break
-            line = file.readline()
+    while not line.startswith(delimiters):
+        line = file.readline()
     return line
 
 
@@ -94,7 +86,7 @@ def read_sdf_file(path_to_file: str) -> None:
             number_of_atoms, number_of_bonds = atoms_bonds_count(file)
             atoms = get_atoms(file, number_of_atoms)
             bonds_data = bonds(file, number_of_bonds)
-            skip_non_structural_data(file, '$$$$\n')
+            skip_non_structural_data(file, ['$$$$\n'])
 
             molecule = Molecule(molecular_name, atoms, bonds_data)
 
