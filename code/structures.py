@@ -103,10 +103,8 @@ class Chain:
         return self.residues[item]
 
     def get_atom_count(self) -> int:
-        atom_count = 0
-        for residue in self:
-            atom_count += residue.get_atom_count()
-        return atom_count
+        """Returns number of atoms of particular chain"""
+        return sum([residue.get_atom_count() for residue in self])
 
 
 class Model:
