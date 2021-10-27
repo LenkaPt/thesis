@@ -81,3 +81,29 @@ class Residue:
 
     def __getitem__(self, item):
         return self.atoms[item]
+
+
+class Chain:
+    def __init__(self, name, residues):
+        self._name = name
+        self._residues = residues
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def residues(self) -> List[Residue]:
+        return self._residues
+
+    def __len__(self) -> int:
+        return len(self.residues)
+
+    def __getitem__(self, item):
+        return self.residues[item]
+
+    def get_atom_count(self) -> int:
+        atom_count = 0
+        for residue in self:
+            atom_count += residue.get_atom_count()
+        return atom_count
