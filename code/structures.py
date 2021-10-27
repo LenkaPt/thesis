@@ -139,3 +139,18 @@ class Model:
         for chain in self:
             residues += [residue.name for residue in chain]
         return Counter(residues).most_common(1)[0][0]
+
+
+class Protein:
+    def __init__(self, models):
+        self._models = models
+
+    @property
+    def models(self) -> List[Model]:
+        return self._models
+
+    def get_number_of_models(self) -> int:
+        return len(self.models)
+
+    def __getitem__(self, item):
+        return self.models[item]
