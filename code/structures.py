@@ -107,3 +107,35 @@ class Chain:
         for residue in self:
             atom_count += residue.get_atom_count()
         return atom_count
+
+
+class Model:
+    def __init__(self, name, chains):
+        self._name = name
+        self._chains = chains
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def chains(self) -> List[Chain]:
+        return self._chains
+
+    def get_number_of_chains(self) -> int:
+        return len(self.chains)
+
+    def __getitem__(self, item):
+        return self.chains[item]
+
+    def get_residue_count(self) -> int:
+        residue_count = 0
+        for chain in self:
+            residue_count += len(chain)
+        return residue_count
+
+    def get_most_common_residue(self) -> str:
+        residues = []
+        for chain in self:
+            residues += [residue.name for residue in chain]
+        return Counter(residues).most_common(1)[0][0]
