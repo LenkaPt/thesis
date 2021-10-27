@@ -56,3 +56,28 @@ class Molecule:
 
     def __len__(self) -> int:
         return len(self.atoms)
+
+
+class Residue:
+    def __init__(self, name, number, atoms):
+        self._name = name
+        self._number = number
+        self._atoms = atoms
+
+    @property
+    def name(self) -> str:
+        return self._name
+
+    @property
+    def number(self) -> int:
+        return self._number
+
+    @property
+    def atoms(self) -> List[Atom]:
+        return self._atoms
+
+    def get_atom_count(self) -> int:
+        return len(self.atoms)
+
+    def __getitem__(self, item):
+        return self.atoms[item]
