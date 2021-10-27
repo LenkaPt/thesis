@@ -48,7 +48,7 @@ def get_chain(file: TextIO, line: str) -> Tuple[Chain, str]:
 def get_models(file: TextIO) -> List[Model]:
     """Returns all models in pdb file."""
     models = []
-    line = skip_non_structural_data(file, 'MODEL', pdb=True)
+    line = skip_non_structural_data(file, ['MODEL', 'ATOM'])
     # It is possible, that no keyword MODEL is in file - in that case
     # line starts with ATOM keyword. This program saves data as
     # model with name 1
