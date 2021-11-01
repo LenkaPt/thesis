@@ -52,8 +52,21 @@ def bonds(file: TextIO, number_of_bonds: int) -> Dict[Tuple[int, int], int]:
     bonds_data = {}
     for i in range(number_of_bonds):
         line = file.readline()
-        first_atom, second_atom = sorted((int(line[:3]), int(line[3:6])))
-        type_of_bond = int(line[6:9])
+        try:
+            first_atom, second_atom = sorted((int(line[:3]), int(line[3:6])))
+            type_of_bond = int(line[6:9])
+        except ValueError:
+            if '.' in line[3:6]:
+                # probably info about atom coordinates expected
+                raise ValueError(f'Please check if number of atoms in '
+                                 f'the counts line is correct.'
+                                 f' Bond block expected.'
+                                 f'\nGiven line: {line.strip()}')
+            raise ValueError(f'Please check {len(bonds_data) + 1}. line '
+                             f'of the bond block. Format 111222ttt is '
+                             f'expected, where all numbers must be integers. '
+                             f'111 is number of first atom, 222 is number of second'
+                             f' atom and ttt is bond type.')
 
         bonds_data[(first_atom, second_atom)] = type_of_bond
 
