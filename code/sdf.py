@@ -28,7 +28,18 @@ def get_atoms(file: TextIO, number_of_atoms: int) -> List[Atom]:
     for _ in range(number_of_atoms):
         line = file.readline()
         x, y, z, element_name = line[:10], line[10:20], line[20:30], line[30:34].strip()
-        x, y, z = float(x), float(y), float(z)
+        # x, y, z should be floats
+        try:
+            x, y, z = float(x), float(y), float(z)
+        except ValueError:
+            if not element_name:
+                raise ValueError(f'Please check if number of atoms in '
+                                 f'the counts line is correct. '
+                                 f'Coordinate information about atom are expected.'
+                                 f'\nGiven line: {line.strip()}')
+            raise ValueError(f'Please check coordinates of atom number '
+                             f'{len(atoms) + 1} ({element_name}). '
+                             f'Coordinates must be floats.')
 
         atom = Atom(x, y, z, element_name)
         atoms.append(atom)
