@@ -12,8 +12,14 @@ def atoms_bonds_count(file: TextIO) -> (int, int):
     """Returns number of atoms and number of bonds within a molecule"""
     skip_two_lines(file)
     line = file.readline()
-    # AAABBB
-    return int(line[:3]), int(line[3:6])
+    # AAABBB (integers)
+    try:
+        return int(line[:3]), int(line[3:6])
+    except ValueError:
+        raise ValueError('Please, check the counts line (fourth line). '
+                         'Expected format is aaabbb, where aaa is '
+                         'number of atoms (integer) '
+                         'and bbb is number of bonds (integer).')
 
 
 def get_atoms(file: TextIO, number_of_atoms: int) -> List[Atom]:
