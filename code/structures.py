@@ -3,35 +3,35 @@ from collections import Counter
 
 
 class Atom:
-    def __init__(self, x, y, z, name):
+    def __init__(self, x: float, y: float, z: float, name: str):
         self._x = x
         self._y = y
         self._z = z
         self._name = name
 
     @property
-    def x(self):
+    def x(self) -> float:
         return self._x
 
     @property
-    def y(self):
+    def y(self) -> float:
         return self._y
 
     @property
-    def z(self):
+    def z(self) -> float:
         return self._z
 
     @property
-    def name(self):
+    def name(self) -> str:
         return self._name
 
-    def print_coordinates(self):
+    def print_coordinates(self) -> None:
         print(f'Coordinates of atom {self._name}: \n\t'
               f'x: {self._x}, y: {self._y}, z: {self._z}')
 
 
 class Molecule:
-    def __init__(self, name, atoms, bonds):
+    def __init__(self, name: str, atoms: List[Atom], bonds):
         self._name = name
         self._atoms = atoms
         self._bonds = bonds
@@ -59,7 +59,7 @@ class Molecule:
 
 
 class Residue:
-    def __init__(self, name, number, atoms):
+    def __init__(self, name: str, number: int, atoms: List[Atom]):
         self._name = name
         self._number = number
         self._atoms = atoms
@@ -79,12 +79,12 @@ class Residue:
     def get_atom_count(self) -> int:
         return len(self.atoms)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> Atom:
         return self.atoms[item]
 
 
 class Chain:
-    def __init__(self, name, residues):
+    def __init__(self, name: str, residues: List[Residue]):
         self._name = name
         self._residues = residues
 
@@ -99,7 +99,7 @@ class Chain:
     def __len__(self) -> int:
         return len(self.residues)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> Residue:
         return self.residues[item]
 
     def get_atom_count(self) -> int:
@@ -108,7 +108,7 @@ class Chain:
 
 
 class Model:
-    def __init__(self, name, chains):
+    def __init__(self, name: str, chains: List[Chain]):
         self._name = name
         self._chains = chains
 
@@ -123,7 +123,7 @@ class Model:
     def get_number_of_chains(self) -> int:
         return len(self.chains)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item) -> Chain:
         return self.chains[item]
 
     def get_residue_count(self) -> int:
@@ -140,7 +140,7 @@ class Model:
 
 
 class Protein:
-    def __init__(self, models):
+    def __init__(self, models: List[Model]):
         self._models = models
 
     @property
@@ -150,5 +150,5 @@ class Protein:
     def get_number_of_models(self) -> int:
         return len(self.models)
 
-    def __getitem__(self, item):
+    def __getitem__(self, item: int) -> Model:
         return self.models[item]
