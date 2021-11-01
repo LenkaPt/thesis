@@ -114,9 +114,13 @@ def read_sdf_file(path_to_file: str) -> None:
         molecules = []
         molecular_name = file.readline().strip()
         while molecular_name:
-            number_of_atoms, number_of_bonds = atoms_bonds_count(file)
-            atoms = get_atoms(file, number_of_atoms)
-            bonds_data = bonds(file, number_of_bonds)
+            try:
+                number_of_atoms, number_of_bonds = atoms_bonds_count(file)
+                atoms = get_atoms(file, number_of_atoms)
+                bonds_data = bonds(file, number_of_bonds)
+            except ValueError as e:
+                raise ValueError(f'Problem occurred! \nMolecule: {molecular_name}'
+                                 f'\n{e}\n-------')
             skip_non_structural_data(file, ['$$$$\n'])
 
             molecule = Molecule(molecular_name, atoms, bonds_data)
