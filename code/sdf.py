@@ -20,7 +20,8 @@ def get_atoms(file: TextIO, number_of_atoms: int) -> List[Atom]:
     """Saves data about atoms in sdf file."""
     atoms = []
     for _ in range(number_of_atoms):
-        x, y, z, element_name, *rest = file.readline().split()
+        line = file.readline()
+        x, y, z, element_name = line[:10], line[10:20], line[20:30], line[30:34].strip()
         x, y, z = float(x), float(y), float(z)
 
         atom = Atom(x, y, z, element_name)
