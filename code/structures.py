@@ -108,7 +108,7 @@ class Chain:
 
 
 class Model:
-    def __init__(self, name: str, chains: List[Chain]):
+    def __init__(self, name: int, chains: List[Chain]):
         self._name = name
         self._chains = chains
 
