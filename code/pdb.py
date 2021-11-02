@@ -15,7 +15,7 @@ def get_atom_pdb(line: str) -> Atom:
         x, y, z = float(line[31:38]), float(line[39:46]), float(line[47:54])
     except ValueError:
         raise ValueError(f'Coordinates of atom {atom_name} must be floats. '
-                         f'x must be in columns 31 - 38, y must be in columns'
+                         f'x must be in columns 31 - 38, y must be in columns '
                          f'39 - 46, z must be in columns 47 - 54.')
 
     atom = Atom(x, y, z, atom_name)
@@ -36,7 +36,12 @@ def get_residue_pdb(file: TextIO, line: str) -> Tuple[Residue, str, str]:
     # collect all atoms of one residue
     atoms = []
     while residue_seq_number == line[23:26]:
-        atom = get_atom_pdb(line)
+        try:
+            atom = get_atom_pdb(line)
+        except ValueError as e:
+            raise ValueError(f'Residuum number {int(residue_seq_number)} ({residue_name}).'
+                             f'\n{e}')
+
         atoms.append(atom)
         line = file.readline()
         if line.startswith('TER'):
