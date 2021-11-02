@@ -86,7 +86,11 @@ def get_models(file: TextIO) -> List[Model]:
 
         chains = []
         while line.startswith('ATOM'):
-            chain, line = get_chain(file, line)
+            try:
+                chain, line = get_chain(file, line)
+            except ValueError as e:
+                raise ValueError(f'Please, check Model {model_name}, {e}')
+
             chains.append(chain)
 
         model = Model(model_name, chains)
