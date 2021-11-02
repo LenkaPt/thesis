@@ -120,4 +120,7 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     input_file = args.file
-    read_pdb_file(input_file)
+    try:
+        read_pdb_file(input_file)
+    except ValueError as e:
+        print(e)
