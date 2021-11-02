@@ -58,7 +58,11 @@ def get_chain(file: TextIO, line: str) -> Tuple[Chain, str]:
     residues = []
     last_chain_id = line[21]
     while last_chain_id == line[21]:
-        residue, chain_id, line = get_residue_pdb(file, line)
+        try:
+            residue, chain_id, line = get_residue_pdb(file, line)
+        except ValueError as e:
+            raise ValueError(f'Chain {last_chain_id}, {e}')
+
         residues.append(residue)
         last_chain_id = chain_id
 
