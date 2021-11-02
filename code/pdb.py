@@ -103,7 +103,11 @@ def get_models(file: TextIO) -> List[Model]:
 
 def read_pdb_file(path_to_file: str) -> Protein:
     with open(path_to_file) as file:
-        models = get_models(file)
+        try:
+            models = get_models(file)
+        except ValueError as e:
+            raise ValueError(f'Problem occurred!\n{e}')
+
         protein = Protein(models)
 
         print(protein.models[-1].chains[-1].residues[-1].atoms[-1].name)
