@@ -6,8 +6,18 @@ from sdf import skip_non_structural_data
 
 def get_atom_pdb(line: str) -> Atom:
     """Returns one atom from pdb file (as instance of Atom class)"""
-    atom_name = line[13:16]
-    x, y, z = float(line[31:38]), float(line[39:46]), float(line[47:54])
+    atom_name = line[13:16].strip()
+    if not atom_name.startswith(('C', 'N', 'O', 'H', 'S')):
+        raise ValueError(f'Name of atom {atom_name} is not correct. '
+                         f'Atom name must be in columns 13 - 16.')
+
+    try:
+        x, y, z = float(line[31:38]), float(line[39:46]), float(line[47:54])
+    except ValueError:
+        raise ValueError(f'Coordinates of atom {atom_name} must be floats. '
+                         f'x must be in columns 31 - 38, y must be in columns'
+                         f'39 - 46, z must be in columns 47 - 54.')
+    
     atom = Atom(x, y, z, atom_name)
     return atom
 
