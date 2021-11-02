@@ -17,7 +17,7 @@ def get_atom_pdb(line: str) -> Atom:
         raise ValueError(f'Coordinates of atom {atom_name} must be floats. '
                          f'x must be in columns 31 - 38, y must be in columns'
                          f'39 - 46, z must be in columns 47 - 54.')
-    
+
     atom = Atom(x, y, z, atom_name)
     return atom
 
@@ -27,6 +27,12 @@ def get_residue_pdb(file: TextIO, line: str) -> Tuple[Residue, str, str]:
     chain_id = line[21]
     residue_seq_number = line[23:26]
     residue_name = line[17:20]
+    if not residue_name.startswith(('ALA', 'ARG', 'ASN', 'ASP', 'CYS', 'GLN',
+                                    'GLU', 'GLY', 'HIS', 'ILE', 'LEU', 'LYS',
+                                    'MET', 'PHE', 'PRO', 'SER', 'THR', 'TRP',
+                                    'TYR', 'VAL')):
+        raise ValueError(f'residuum name {residue_name} is not correct.'
+                         f' Residuum name must be in columns 18 - 20.')
     # collect all atoms of one residue
     atoms = []
     while residue_seq_number == line[23:26]:
