@@ -1,4 +1,5 @@
 import argparse
+import sys
 from sdf import read_sdf_file
 from pdb import read_pdb_file
 
@@ -16,3 +17,4 @@ if __name__ == '__main__':
             read_pdb_file(input_file)
     except ValueError as e:
         print(e)
+        sys.exit(1)
