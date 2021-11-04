@@ -1,4 +1,5 @@
 import argparse
+import sys
 from typing import List, Tuple, TextIO
 from structures import Atom, Residue, Chain, Model, Protein
 from sdf import skip_non_structural_data
@@ -124,3 +125,4 @@ if __name__ == '__main__':
         read_pdb_file(input_file)
     except ValueError as e:
         print(e)
+        sys.exit(1)
