@@ -1,4 +1,5 @@
 import argparse
+import sys
 from typing import List, Dict, Tuple, TextIO
 from structures import Atom, Molecule
 
@@ -146,3 +147,4 @@ if __name__ == '__main__':
         read_sdf_file(input_file)
     except ValueError as e:
         print(e)
+        sys.exit(1)
