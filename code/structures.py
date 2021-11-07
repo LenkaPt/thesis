@@ -140,8 +140,13 @@ class Model:
 
 
 class Protein:
-    def __init__(self, models: List[Model]):
+    def __init__(self, name, models: List[Model]):
+        self._name = name
         self._models = models
+
+    @property
+    def name(self):
+        return self._name
 
     @property
     def models(self) -> List[Model]:
