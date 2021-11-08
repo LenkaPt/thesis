@@ -19,7 +19,13 @@ def get_atom_pdb(line: str) -> Atom:
                          f'x must be in columns 31 - 38, y must be in columns '
                          f'39 - 46, z must be in columns 47 - 54.')
 
-    atom = Atom(x, y, z, atom_name)
+    try:
+        atom_number = int(line[6:11])
+    except ValueError:
+        raise ValueError(f'Number of atom {atom_name} must be integer. '
+                         f'Atom number must be in columns 7 - 11.')
+
+    atom = Atom(x, y, z, atom_name, atom_number)
     return atom
 
 
@@ -112,7 +118,7 @@ def read_pdb_file(path_to_file: str) -> Protein:
 
         protein = Protein(protein_name, models)
 
-        # print(protein.models[-1].chains[-1].residues[-1].atoms[-1].name)
+        print(protein.models[-1].chains[-1].residues[-1].atoms[-1].number)
         return protein
 
 
