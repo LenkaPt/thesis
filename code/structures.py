@@ -3,11 +3,12 @@ from collections import Counter
 
 
 class Atom:
-    def __init__(self, x: float, y: float, z: float, name: str):
+    def __init__(self, x: float, y: float, z: float, name: str, number: int = 0):
         self._x = x
         self._y = y
         self._z = z
         self._name = name
+        self._number = number
 
     @property
     def x(self) -> float:
@@ -24,6 +25,10 @@ class Atom:
     @property
     def name(self) -> str:
         return self._name
+
+    @property
+    def number(self) -> int:
+        return self._number
 
     def print_coordinates(self) -> None:
         print(f'Coordinates of atom {self._name}: \n\t'
