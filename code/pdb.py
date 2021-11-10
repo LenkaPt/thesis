@@ -56,7 +56,7 @@ def get_residue_pdb(file: TextIO, line: str) -> Tuple[Residue, str, str]:
             line = file.readline()
             break
 
-    residue = Residue(residue_name, residue_seq_number, atoms)
+    residue = Residue(residue_name, int(residue_seq_number), atoms)
     return residue, chain_id, line
 
 
