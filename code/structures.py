@@ -132,10 +132,7 @@ class Model:
         return self.chains[item]
 
     def get_residue_count(self) -> int:
-        residue_count = 0
-        for chain in self:
-            residue_count += len(chain)
-        return residue_count
+        return sum([len(chain) for chain in self])
 
     def get_most_common_residue(self) -> str:
         residues = []
