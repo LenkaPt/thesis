@@ -1,5 +1,34 @@
-from typing import List, Dict
+from typing import List, Dict, TextIO, Tuple
 from collections import Counter
+
+
+def load_one_standard_aa(file: TextIO) -> Tuple[str, Dict[Tuple[str, str], int]]:
+    """Returns name of aminoacid and list of tuples.
+    One tuple represents one bond (atom1, atom2, type of bond).
+    """
+    name = file.readline().strip()
+    atoms_of_aa = {}
+    line = file.readline()
+    # EOF or empty line (end of aa)
+    while line and line != '\n':
+        first_atom, sec_atom, bond = line.split()
+        first_atom, sec_atom = sorted((first_atom, sec_atom))
+        atoms_of_aa[(first_atom, sec_atom)] = int(bond)
+        line = file.readline()
+    return name, atoms_of_aa
+
+
+def load_standard_aa(path_to_file: str) -> Dict[str, Dict[Tuple[str, str], int]]:
+    """Returns standard aminoacids, saved in dictionary.
+    {name_of_aa: [(atom1, atom2, type_of_bond), (...), ...]}
+    """
+    with open(path_to_file) as file:
+        aa = {}
+        for _ in range(20):
+            name, atoms_of_aa = load_one_standard_aa(file)
+            aa[name] = atoms_of_aa
+        # print(aa)
+        return aa
 
 
 class Atom:
