@@ -124,6 +124,11 @@ class Residue:
 
         return atom_order
 
+    def get_standard_bonds(self) -> Dict[Tuple[str, str], int]:
+        """Returns standard bonds of particular residue"""
+        standard_aa = load_standard_aa('amino_acids.txt')
+        return standard_aa[self.name]
+
 
 class Chain:
     def __init__(self, name: str, residues: List[Residue]):
