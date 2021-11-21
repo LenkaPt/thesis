@@ -148,6 +148,10 @@ class Model:
             residues += [residue.name for residue in chain]
         return Counter(residues).most_common(1)[0][0]
 
+    def get_atom_count(self) -> int:
+        """Finds out number of atoms in given model of protein."""
+        return sum([chain.get_atom_count() for chain in self])
+
 
 class Protein:
     def __init__(self, name, models: List[Model]):
