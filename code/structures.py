@@ -1,4 +1,4 @@
-from typing import List
+from typing import List, Dict
 from collections import Counter
 
 
@@ -86,6 +86,14 @@ class Residue:
 
     def __getitem__(self, item: int) -> Atom:
         return self.atoms[item]
+
+    def get_atom_order(self) -> Dict[str, int]:
+        """Returns atoms as keys and its order in particular residuum as values"""
+        atom_order = {}
+        for atom in self:
+            atom_order[atom.name] = atom.number
+
+        return atom_order
 
 
 class Chain:
