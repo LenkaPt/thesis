@@ -305,6 +305,7 @@ if __name__ == '__main__':
         if protein[0].get_atom_count() <= 999:
             data = V2000(protein, output_file)
         else:
+            # TODO - formát V3000 špatně - nelze zoobrazit pomocí Pymolu
             data = V3000(protein, output_file)
         data.write_to_file()
 
