@@ -1,4 +1,5 @@
 import argparse
+import sys
 from pdb import read_pdb_file
 from structures import Protein, Atom
 from typing import Dict, Tuple, TextIO
@@ -227,7 +228,8 @@ class V3000(ProteinToSdf):
 
     def write_header(self):
         self.output_file.write(f'\n\n'
-                               f'{999:>33}'
+                               f' 0 0'
+                               f'{999:>29}'
                                f'{"V3000":>6}'
                                f'\n')
 
@@ -299,9 +301,13 @@ if __name__ == '__main__':
 
     input_file = args.file
 
-    protein = read_pdb_file(input_file)
+    try:
+        protein = read_pdb_file(input_file)
+    except ValueError as e:
+        print(e)
+        sys.exit(1)
 
-    with open('converted_protein.sdf', mode='w', encoding='utf8') as output_file:
+    with open('converted_protein.txt', mode='w', encoding='utf8') as output_file:
         if protein[0].get_atom_count() <= 999:
             data = V2000(protein, output_file)
         else:
@@ -309,4 +315,4 @@ if __name__ == '__main__':
             data = V3000(protein, output_file)
         data.write_to_file()
 
-    os.startfile('converted_protein.sdf')
+    os.startfile('converted_protein.txt')
