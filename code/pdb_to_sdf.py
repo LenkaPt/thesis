@@ -21,6 +21,18 @@ class ProteinToSdf:
 
     def get_atoms_count_of_protein(self) -> int:
         """Returns number of atoms of protein"""
+        # print(f'{self.protein.name}:')
+        # i = 1
+        # for model in protein:
+        #     for chain in model:
+        #         print(chain.name, chain.get_atom_count())
+        #         for residue in chain:
+        #             for atom in residue:
+        #                 if atom.number != i:
+        #                     print(atom.number, atom.name, i)
+        #                     return
+        #                 i += 1
+        # TODO problem with TER
         return self.protein[0].get_atom_count()
 
     def get_bonds_of_atom(self, atom: Atom, bonds_in_residue: Dict[Tuple[str, str], int],
@@ -307,7 +319,7 @@ if __name__ == '__main__':
         print(e)
         sys.exit(1)
 
-    with open('converted_protein.sdf', mode='w', encoding='utf8') as output_file:
+    with open('converted_protein.txt', mode='w', encoding='utf8') as output_file:
         if protein[0].get_atom_count() <= 999:
             data = V2000(protein, output_file)
         else:
@@ -315,4 +327,4 @@ if __name__ == '__main__':
             data = V3000(protein, output_file)
         data.write_to_file()
 
-    os.startfile('converted_protein.sdf')
+    #os.startfile('converted_protein.txt')
