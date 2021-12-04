@@ -138,12 +138,7 @@ class ProteinToSdf:
     def write_to_file(self) -> None:
         """Writes sdf file.
         Particular format implemented in subclass V2000/V3000"""
-        self.write_name()
-        self.write_header()
-        self.write_count_line()
-        self.write_atom_block()
-        self.write_bond_block()
-        self.write_footer()
+        pass
 
 
 class V2000(ProteinToSdf):
@@ -233,6 +228,14 @@ class V2000(ProteinToSdf):
                                f'\n'
                                f'$$$$')
 
+    def write_to_file(self) -> None:
+        self.write_name()
+        self.write_header()
+        self.write_count_line()
+        self.write_atom_block()
+        self.write_bond_block()
+        self.write_footer()
+
 
 class V3000(ProteinToSdf):
     def __init__(self, protein: Protein, output_file: TextIO):
@@ -319,7 +322,7 @@ if __name__ == '__main__':
         print(e)
         sys.exit(1)
 
-    with open('converted_protein.txt', mode='w', encoding='utf8') as output_file:
+    with open('converted_protein.sdf', mode='w', encoding='utf8') as output_file:
         if protein[0].get_atom_count() <= 999:
             data = V2000(protein, output_file)
         else:
@@ -327,4 +330,4 @@ if __name__ == '__main__':
             data = V3000(protein, output_file)
         data.write_to_file()
 
-    #os.startfile('converted_protein.txt')
+    os.startfile('converted_protein.sdf')
