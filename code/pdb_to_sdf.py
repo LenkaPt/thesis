@@ -307,7 +307,7 @@ if __name__ == '__main__':
         print(e)
         sys.exit(1)
 
-    with open('converted_protein.txt', mode='w', encoding='utf8') as output_file:
+    with open('converted_protein.sdf', mode='w', encoding='utf8') as output_file:
         if protein[0].get_atom_count() <= 999:
             data = V2000(protein, output_file)
         else:
@@ -315,4 +315,4 @@ if __name__ == '__main__':
             data = V3000(protein, output_file)
         data.write_to_file()
 
-    os.startfile('converted_protein.txt')
+    os.startfile('converted_protein.sdf')
