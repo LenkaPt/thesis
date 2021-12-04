@@ -311,10 +311,14 @@ class V3000(ProteinToSdf):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file', help='Input file in .sdf or .pdb format')
-    # TODO přepínač na konverzi z pdb do sdf
+    parser.add_argument('-c', '--conversion', dest='conversion_file',
+                        help='Allows to convert protein from input pdb file to output sdf file. '
+                             'Please specify name of output .sdf file.',
+                        default=False)
     args = parser.parse_args()
 
     input_file = args.file
+    print(args.conversion_file)
 
     try:
         protein = read_pdb_file(input_file)
@@ -322,12 +326,13 @@ if __name__ == '__main__':
         print(e)
         sys.exit(1)
 
-    with open('converted_protein.sdf', mode='w', encoding='utf8') as output_file:
-        if protein[0].get_atom_count() <= 999:
-            data = V2000(protein, output_file)
-        else:
-            # TODO - formát V3000 špatně - nelze zoobrazit pomocí Pymolu
-            data = V3000(protein, output_file)
-        data.write_to_file()
+    if args.conversion_file:
+        with open(args.conversion_file, mode='w', encoding='utf8') as output_file:
+            if protein[0].get_atom_count() <= 999:
+                data = V2000(protein, output_file)
+            else:
+                # TODO - formát V3000 špatně - nelze zoobrazit pomocí Pymolu
+                data = V3000(protein, output_file)
+            data.write_to_file()
 
-    os.startfile('converted_protein.sdf')
+        os.startfile(args.conversion_file)
