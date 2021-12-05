@@ -52,7 +52,7 @@ class ProteinToSdf:
     def get_bonds_count_of_protein(self) -> int:
         """Returns number of bonds within in the protein"""
         bonds_count = 0
-        for chain in protein[0]:
+        for chain in self.protein[0]:
             for residue in chain:
                 bonds_in_residue = residue.get_standard_bonds()
                 atoms_order_in_residue = residue.get_atom_order()
@@ -84,7 +84,7 @@ class ProteinToSdf:
         """Writes atom block into sdf output_file.
         Particular format implemented in subclass V2000/V3000"""
         # protein[0] == model
-        for chain in protein[0]:
+        for chain in self.protein[0]:
             for residue in chain:
                 for atom in residue:
                     self.write_atom(atom)
@@ -111,7 +111,7 @@ class ProteinToSdf:
         """Writes bond block into sdf output file.
         Particular format implemented in subclass V2000/V3000"""
         bond_number = 1
-        model = protein[0]
+        model = self.protein[0]
         number_of_last_residue = model.get_residue_count()
         for chain in model:
             for residue in chain:
@@ -318,7 +318,6 @@ if __name__ == '__main__':
     args = parser.parse_args()
 
     input_file = args.file
-    print(args.conversion_file)
 
     try:
         protein = read_pdb_file(input_file)
