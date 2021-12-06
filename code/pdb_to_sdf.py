@@ -3,10 +3,11 @@ import sys
 from pdb import read_pdb_file
 from structures import Protein, Atom
 from typing import Dict, Tuple, TextIO
+from abc import ABC, abstractmethod
 import os
 
 
-class ProteinToSdf:
+class ProteinToSdf(ABC):
     def __init__(self, protein: Protein, output_file: TextIO):
         self._protein = protein
         self._output_file = output_file
@@ -23,7 +24,7 @@ class ProteinToSdf:
         """Returns number of atoms of protein"""
         # print(f'{self.protein.name}:')
         # i = 1
-        # for model in protein:
+        # for model in self.protein:
         #     for chain in model:
         #         print(chain.name, chain.get_atom_count())
         #         for residue in chain:
@@ -65,16 +66,19 @@ class ProteinToSdf:
         """Writes name of protein into output_file"""
         self.output_file.write(f'{self.protein.name}\n')
 
+    @abstractmethod
     def write_header(self) -> None:
         """Writes sdf header into output_file.
         Particular format implemented in subclass V2000/V3000"""
         pass
 
+    @abstractmethod
     def write_count_line(self) -> None:
         """Writes sdf count_line into output_file.
         Particular format implemented in subclass V2000/V3000"""
         pass
 
+    @abstractmethod
     def write_atom(self, atom: Atom) -> None:
         """Writes atom into sdf output_file.
         Particular format implemented in subclass V2000/V3000"""
@@ -89,11 +93,13 @@ class ProteinToSdf:
                 for atom in residue:
                     self.write_atom(atom)
 
+    @abstractmethod
     def write_N(self, atoms_order_in_residue) -> None:
         """Writes N of peptidic bond into sdf file.
         Particular format implemented in subclass V2000/V3000"""
         pass
 
+    @abstractmethod
     def write_bonds(self, bonds_of_atom: Dict[Tuple[str, str], int],
                     atoms_order_in_residue: Dict[str, int],
                     bond_number: int) -> None:
@@ -101,6 +107,7 @@ class ProteinToSdf:
         Particular format implemented in subclass V2000/V3000"""
         pass
 
+    @abstractmethod
     def write_C(self, atoms_order_in_residue: Dict[str, int],
                 bond_number: int) -> None:
         """Writes C of peptidic bond into sdf file.
@@ -130,11 +137,13 @@ class ProteinToSdf:
                     self.write_C(atoms_order_in_residue, bond_number)
                 bond_number += 1    # peptidic bond
 
+    @abstractmethod
     def write_footer(self) -> None:
         """Writes footer of sdf into output file.
         Particular format implemented in subclass V2000/V3000"""
         pass
 
+    @abstractmethod
     def write_to_file(self) -> None:
         """Writes sdf file.
         Particular format implemented in subclass V2000/V3000"""
