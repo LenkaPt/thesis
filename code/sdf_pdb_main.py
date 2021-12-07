@@ -3,7 +3,7 @@ import sys
 import os
 from sdf import read_sdf_file
 from pdb import read_pdb_file
-from pdb_to_sdf import V2000, V3000
+from pdb_to_sdf import V2000, V3000, convert_pdb_to_sdf
 
 
 if __name__ == '__main__':
@@ -26,11 +26,5 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if args.conversion_file:
-        with open(args.conversion_file, mode='w', encoding='utf8') as output_file:
-            if protein[0].get_atom_count() <= 999:
-                data = V2000(protein, output_file)
-            else:
-                # TODO - formát V3000 špatně - nelze zoobrazit pomocí Pymolu
-                data = V3000(protein, output_file)
-            data.write_to_file()
+        convert_pdb_to_sdf(protein, args.conversion_file)
         os.startfile(args.conversion_file)
