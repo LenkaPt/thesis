@@ -2,7 +2,7 @@ import argparse
 import sys
 from sdf import read_sdf_file
 from pdb import read_pdb_file
-from pdb_to_sdf import convert_pdb_to_sdf
+from conversion import convert_pdb_to_sdf
 from pathlib import Path
 
 
