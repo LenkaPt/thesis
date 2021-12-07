@@ -235,7 +235,8 @@ class V2000(ProteinToSdf):
     def write_footer(self):
         self.output_file.write(f'M  END'
                                f'\n'
-                               f'$$$$')
+                               f'$$$$'
+                               f'\n')
 
     def write_to_file(self) -> None:
         self.write_name()
@@ -296,7 +297,7 @@ class V3000(ProteinToSdf):
         self.output_file.write(f'M  V30 {bond_number} {1} {atoms_order_in_residue["C"]} ')
 
     def write_footer(self):
-        self.output_file.write(f'M  END')
+        self.output_file.write(f'M  END\n')
 
     def write_to_file(self):
         self.write_name()
