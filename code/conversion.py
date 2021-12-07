@@ -329,7 +329,7 @@ def convert_pdb_to_sdf(protein: Protein, destination_file):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
-    parser.add_argument('file', help='Input file in .sdf or .pdb format')
+    parser.add_argument('file', help='Input file in .pdb format')
     parser.add_argument('-c', '--conversion', dest='conversion_file',
                         help='Allows to convert protein from input pdb file to output sdf file. '
                              'Please specify name of output .sdf file.',
@@ -347,4 +347,4 @@ if __name__ == '__main__':
     if args.conversion_file:
         convert_pdb_to_sdf(protein, args.conversion_file)
 
-        os.startfile(args.conversion_file)
+        # os.startfile(args.conversion_file)
