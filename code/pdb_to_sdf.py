@@ -318,6 +318,15 @@ class V3000(ProteinToSdf):
         self.write_footer()
 
 
+def convert_pdb_to_sdf(protein: Protein, destination_file):
+    with open(destination_file, mode='a', encoding='utf8') as output_file:
+        if protein[0].get_atom_count() <= 999:
+            data = V2000(protein, output_file)
+        else:
+            data = V3000(protein, output_file)
+        data.write_to_file()
+
+
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('file', help='Input file in .sdf or .pdb format')
@@ -336,12 +345,6 @@ if __name__ == '__main__':
         sys.exit(1)
 
     if args.conversion_file:
-        with open(args.conversion_file, mode='w', encoding='utf8') as output_file:
-            if protein[0].get_atom_count() <= 999:
-                data = V2000(protein, output_file)
-            else:
-                # TODO - formát V3000 špatně - nelze zoobrazit pomocí Pymolu
-                data = V3000(protein, output_file)
-            data.write_to_file()
+        convert_pdb_to_sdf(protein, args.conversion_file)
 
         os.startfile(args.conversion_file)
