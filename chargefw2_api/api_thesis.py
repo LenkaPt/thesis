@@ -174,9 +174,21 @@ def add_hydrogens():
     if not identifier:
         return json_error(f'You have not specified identifier obtained after uploading your file. '
                           f'Add to URL following, please: ?identifier=obtained_identifier')
+
+    pH = request.args.get('pH')
+    if not pH:
+        pH = 7.0
+
     input_file = get_path_based_on_identifier(identifier)
     output_file = os.path.join(tempfile.mkdtemp(), 'result.pqr')
-    subprocess.run(['pdb2pqr30', f'{input_file}', f'{output_file}'])
+
+    # hydrogen bond optimalization
+    noopt = request.args.get('noopt')
+
+    if not noopt:
+        subprocess.run(['pdb2pqr30', f'--noopt', f'--pH', f'{pH}', f'{input_file}', f'{output_file}'])
+    else:
+        subprocess.run(['pdb2pqr30', f'--pH', f'{pH}', f'{input_file}', f'{output_file}'])
 
     output_identifier = os.path.basename(tempfile.NamedTemporaryFile(prefix='hydro').name)
     save_file_identifiers({output_identifier: output_file})
